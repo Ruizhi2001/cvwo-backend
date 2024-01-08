@@ -59,5 +59,16 @@ func Login(context *gin.Context) {
 		return
 	}
 
+	cookie := http.Cookie{
+		Name:     "jwt",
+		Value:    jwt,
+		HttpOnly: true,
+		// Uncomment when deploying to production for https
+		// Secure:  true,
+		SameSite: http.SameSiteLaxMode,
+	}
+
+	http.SetCookie(context.Writer, &cookie)
+
 	context.JSON(http.StatusOK, gin.H{"jwt": jwt})
 }
