@@ -3,6 +3,7 @@ package helper
 import (
 	"errors"
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -28,6 +29,7 @@ func GenerateJWT(user model.User) (string, error) {
 func ValidateJWT(context *gin.Context) error {
 	token, err := getToken(context)
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 	_, ok := token.Claims.(jwt.MapClaims)

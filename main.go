@@ -8,6 +8,7 @@ import (
 	"github.com/Ruizhi2001/cvwo-backend/database"
 	"github.com/Ruizhi2001/cvwo-backend/middleware"
 	"github.com/Ruizhi2001/cvwo-backend/model"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
@@ -31,10 +32,21 @@ func loadDatabase() {
 	database.Database.AutoMigrate(&model.Entry{})
 }
 
+func CORSConfig() cors.Config {
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowOrigins = []string{"http://localhost:3000"}
+	corsConfig.AllowMethods = []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"}
+	corsConfig.AllowHeaders = []string{"Origin", "Content-Type", "Authorization"}
+	corsConfig.AllowCredentials = true
+	return corsConfig
+}
+
 func serveApplication() {
 	router := gin.Default()
 
-	publicRoutes := router.Group("/auth")
+	router.Use(cors.New(CORSConfig()))
+
+	publicRoutes := router.Group("/user")
 	publicRoutes.POST("/register", controller.Register)
 	publicRoutes.POST("/login", controller.Login)
 
